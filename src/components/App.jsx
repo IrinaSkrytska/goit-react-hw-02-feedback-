@@ -5,26 +5,25 @@ import Section from './Section';
 import Notification from './Notification';
 import Container from './Container';
 
-
-
 export class App extends Component {
   state = {
     good: 0,
     neutral: 0,
-    bad: 0
+    bad: 0,
   };
-  
 
   //adding one when user clicks on button
-  
+
   handleIncrement = btnId => {
     this.setState(prevState => ({ [btnId]: prevState[btnId] + 1 }));
   };
-    
+
   //counting total feedback
 
   countTotalFeedback = () => {
-    return this.state.good + this.state.neutral + this.state.bad
+    const { good, neutral, bad } = this.state;
+
+    return good + neutral + bad;
   };
 
   //counting positive feedback precentage
@@ -34,34 +33,41 @@ export class App extends Component {
     const percentage = (good * 100) / (good + neutral + bad);
 
     return good ? Math.round(percentage) : 0;
-  }
+  };
 
   render() {
     //Destructurisation
     const { good, neutral, bad } = this.state;
-    const { handleIncrement, countTotalFeedback, countPositiveFeedbackPercentage, state } = this;
+    const {
+      handleIncrement,
+      countTotalFeedback,
+      countPositiveFeedbackPercentage,
+      state,
+    } = this;
     const noFeedback = good || neutral || bad;
-
 
     return (
       <Container>
-    <Section title={'Please leave a feedback'}>
-        <FeedbackOptions
-          options={Object.keys(state)}
-          onLeaveFeedback={handleIncrement} />
-        {noFeedback ? (
-        <Statistics
-          good={good}
-          neutral={neutral}
-          bad={bad}
-          total={countTotalFeedback}
-          positivePercentage={countPositiveFeedbackPercentage}
-          /> ): (<Notification message={ 'There is no feedback'} /> )}
+        <Section title={'Please leave a feedback'}>
+          <FeedbackOptions
+            options={Object.keys(state)}
+            onLeaveFeedback={handleIncrement}
+          />
+          {noFeedback ? (
+            <Statistics
+              good={good}
+              neutral={neutral}
+              bad={bad}
+              total={countTotalFeedback}
+              positivePercentage={countPositiveFeedbackPercentage}
+            />
+          ) : (
+            <Notification message={'There is no feedback'} />
+          )}
         </Section>
       </Container>
-    )
-  
+    );
   }
-};
+}
 
 export default App;
